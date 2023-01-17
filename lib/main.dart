@@ -95,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 class StyledText extends StatelessWidget {
-  const StyledText(
+  const  StyledText(
       this.text);
 
   final String text;
