@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'modal/post_modal.dart';
+import 'modal/post_service.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,18 +15,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
+
         primarySwatch: Colors.blue,
       ),
-      home:  HomeScreen(title: 'Flutter Demo Home Page'),
+      home:  HomeScreen(title: 'Exception Handling Part 1'),
     );
   }
 }
@@ -43,48 +35,43 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final PostService _postService=PostService();
 
-  Future<Post>? postFuture;
+  Future<PostModal>? postFuture;
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-
         title: Text(widget.title),
       ),
       body:Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            FutureBuilder<Post>(
+            FutureBuilder<PostModal>(
               future: postFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 } else if (snapshot.hasError) {
-                  final error = snapshot.error;
+                  final error = snapshot.error.toString();
                   return StyledText(error.toString());
                 } else if (snapshot.hasData) {
                   final post = snapshot.data;
                   return StyledText(post.toString(),);
                 } else {
-                  return StyledText('Press the button 👇');
+                  return const StyledText('Press the button 👇');
                 }
               },
             ),
             MaterialButton(
-              child: Text('Get Post'),
+              color:Colors.blue,
+              child: const Text('Get Post',style: TextStyle(color: Colors.white),),
               onPressed: () async {
-                // setState(() {
-                //   postFuture = postService.getOnePost();
-                // });
+                setState(() {
+                  postFuture = _postService.getOnePost();
+                });
               },
             ),
           ],
@@ -105,7 +92,7 @@ class StyledText extends StatelessWidget {
     return Text(
       text,
       textAlign: TextAlign.center,
-      style: TextStyle(fontSize: 40),
+      style: const TextStyle(fontSize: 40),
     );
   }
 }
