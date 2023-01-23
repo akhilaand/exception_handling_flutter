@@ -1,7 +1,8 @@
+import 'package:exception_handling/provider/post_change_notifier.dart';
 import 'package:flutter/material.dart';
 
 import 'modal/post_service.dart';
-
+import 'package:provider/provider.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -18,14 +19,16 @@ class MyApp extends StatelessWidget {
 
         primarySwatch: Colors.blue,
       ),
-      home:  HomeScreen(title: 'Exception Handling Part 1'),
+      home: ChangeNotifierProvider(
+        create: (context) => PostChangeMotifier(),
+        child: HomeScreen(title: 'Exception Handling Part 1'),
+      ),
     );
   }
 }
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({super.key, required this.title});
-
 
 
   final String title;
@@ -35,7 +38,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final PostService _postService=PostService();
+  final PostService _postService = PostService();
 
   Future<PostModal>? postFuture;
 
@@ -45,45 +48,42 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body:Center(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            FutureBuilder<PostModal>(
-              future: postFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  final error = snapshot.error.toString();
-                  return StyledText(error.toString());
-                } else if (snapshot.hasData) {
-                  final post = snapshot.data;
-                  return StyledText(post.toString(),);
-                } else {
-                  return const StyledText('Press the button');
+            Consumer<PostChangeMotifier>(builder: (_,notifier,__){
+              if(notifier.state==NotifierState.initial){
+                return const StyledText('Press the button');
+              }else if(notifier.state==NotifierState.loading){
+                return const CircularProgressIndicator();
+              }else if(notifier.failure!=null){
+                return StyledText(notifier.failure.toString());
+
+              }
+               else{
+                  return StyledText(notifier.post.toString());
                 }
-              },
-            ),
+              }),
+
             MaterialButton(
-              color:Colors.blue,
-              child: const Text('Get Post',style: TextStyle(color: Colors.white),),
+              color: Colors.blue,
+              child: const Text(
+                'Get Post', style: TextStyle(color: Colors.white),),
               onPressed: () async {
-                setState(() {
-                  postFuture = _postService.getOnePost();
-                });
+            Provider.of<PostChangeMotifier>(context).getPost();
               },
             ),
           ],
         ),
       ),
-    // This trailing comma makes auto-formatting nicer for build methods.
+      // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
+
 class StyledText extends StatelessWidget {
-  const  StyledText(
-      this.text);
+  const StyledText(this.text);
 
   final String text;
 

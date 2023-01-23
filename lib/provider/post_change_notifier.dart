@@ -35,6 +35,8 @@ class PostChangeMotifier extends ChangeNotifier{
     try{
       final post=await _postService.getOnePost();
       _setPost(post);
+      _changeState(NotifierState.loaded);
+
     }
         on Failure catch(e){
       _setFailure(e);
