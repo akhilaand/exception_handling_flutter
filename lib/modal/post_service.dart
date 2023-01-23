@@ -19,13 +19,12 @@ class ApiService {
 class PostService {
   final httpClient = ApiService();
   Future<PostModal> getOnePost() async {
-    // The WORST type of error handling.
-    // There's no way to get these error messages to the UI.
     try {
       final responseBody = await httpClient.getResponseBody();
       return PostModal.fromJson(responseBody);
     } on SocketException {
       throw Failure(message: "No Internet Connection");
+      
     }on HttpException{
       throw Failure(message: "Internal Issue Occured");
     }on FormatException{

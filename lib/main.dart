@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   final post = snapshot.data;
                   return StyledText(post.toString(),);
                 } else {
-                  return const StyledText('Press the button 👇');
+                  return const StyledText('Press the button');
                 }
               },
             ),
