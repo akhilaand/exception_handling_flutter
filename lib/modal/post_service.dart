@@ -17,10 +17,10 @@ class ApiService {
 }
 
 class PostService {
-  final httpClient = ApiService();
+  final _apiService = ApiService();
   Future<PostModal> getOnePost() async {
     try {
-      final responseBody = await httpClient.getResponseBody();
+      final responseBody = await _apiService.getResponseBody();
       return PostModal.fromJson(responseBody);
     } on SocketException {
       throw Failure(message: "No Internet Connection");

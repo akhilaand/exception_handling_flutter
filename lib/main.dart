@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'modal/post_service.dart';
 import 'package:provider/provider.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -16,7 +17,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-
         primarySwatch: Colors.blue,
       ),
       home: ChangeNotifierProvider(
@@ -29,7 +29,6 @@ class MyApp extends StatelessWidget {
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({super.key, required this.title});
-
 
   final String title;
 
@@ -52,26 +51,25 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Consumer<PostChangeMotifier>(builder: (_,notifier,__){
-              if(notifier.state==NotifierState.initial){
+            Consumer<PostChangeMotifier>(builder: (_, notifier, __) {
+              if (notifier.state == NotifierState.initial) {
                 return const StyledText('Press the button');
-              }else if(notifier.state==NotifierState.loading){
+              } else if (notifier.state == NotifierState.loading) {
                 return const CircularProgressIndicator();
-              }else if(notifier.failure!=null){
-                return StyledText(notifier.failure.toString());
-
+              } else {
+                return notifier.post!.fold(
+                    (failure) => StyledText(failure.toString()),
+                    (success) => StyledText(success.toString()));
               }
-               else{
-                  return StyledText(notifier.post.toString());
-                }
-              }),
-
+            }),
             MaterialButton(
               color: Colors.blue,
               child: const Text(
-                'Get Post', style: TextStyle(color: Colors.white),),
+                'Get Post',
+                style: TextStyle(color: Colors.white),
+              ),
               onPressed: () async {
-            Provider.of<PostChangeMotifier>(context).getPost();
+                Provider.of<PostChangeMotifier>(context).getPost();
               },
             ),
           ],
