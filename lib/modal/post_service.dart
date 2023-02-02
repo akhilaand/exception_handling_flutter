@@ -9,10 +9,10 @@ class ApiService {
     //! No Internet Connection
     // throw const SocketException('No Internet');
     //! 404
-    throw HttpException('404');
+    // throw HttpException('404');
     //! Invalid JSON (throws FormatException)
     // return 'abcd';
-    // return '{"userId":1,"title":"Result","body":"First result"}';
+    return '{"userId":1,"title":"Result","body":"First result"}';
   }
 }
 

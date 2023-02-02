@@ -5,7 +5,8 @@ import 'package:flutter/cupertino.dart';
 enum NotifierState { initial, loading, loaded }
 
 class PostChangeMotifier extends ChangeNotifier {
-  final PostService _postService = PostService();
+  final PostService _postService;
+  PostChangeMotifier(this._postService);
 
   NotifierState _state = NotifierState.initial;
   NotifierState get state => _state;
@@ -32,6 +33,7 @@ class PostChangeMotifier extends ChangeNotifier {
         )
         .run()
         .then((value) => _setPost(value));
+        _changeState(NotifierState.loaded);
     //   try{
     //     final post=await _postService.getOnePost();
     //     _setPost(post);

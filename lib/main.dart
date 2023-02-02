@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: ChangeNotifierProvider(
-        create: (context) => PostChangeMotifier(),
+        create: (context) => PostChangeMotifier(PostService()),
         child: HomeScreen(title: 'Exception Handling Part 1'),
       ),
     );
@@ -69,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () async {
-                Provider.of<PostChangeMotifier>(context).getPost();
+                Provider.of<PostChangeMotifier>(context,listen: false).getPost();
               },
             ),
           ],
