@@ -33,8 +33,7 @@ class PostChangeMotifier extends ChangeNotifier {
         )
         .run()
         .then((value) => _setPost(value));
-        _changeState(NotifierState.loaded);
-
+    _changeState(NotifierState.loaded);
 
     //   try{
     //     final post=await _postService.getOnePost();
