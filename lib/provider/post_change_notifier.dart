@@ -24,7 +24,7 @@ class PostChangeMotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  void getPost() async {
+  Future<void> getPost() async {
     _changeState(NotifierState.loading);
     await Task(() => _postService.getOnePost())
         .attempt()
@@ -34,6 +34,8 @@ class PostChangeMotifier extends ChangeNotifier {
         .run()
         .then((value) => _setPost(value));
         _changeState(NotifierState.loaded);
+
+
     //   try{
     //     final post=await _postService.getOnePost();
     //     _setPost(post);
